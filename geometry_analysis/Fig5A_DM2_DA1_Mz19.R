@@ -5,10 +5,6 @@
 # Jefferis07 and part of Flycircuit data - allpns.FCWB.rda
 # #  load("~/myscripts/FAFB2017_paper/data/allpns.FCWB.rda")
 
-library(igraph)
-library(grid)
-library(caTools)
-
 ca_2d_plot <- function(nl) {
   plot(nl, WithNode=FALSE, xlab="", ylab="", axes=FALSE, lwd=3, col=my_pal(length(nl)))
 }
@@ -79,10 +75,10 @@ dev.off()
 # DC3 - Jefferis07(4)
 # VA1d - Flycicuit(3), Jefferis07(11)
 # Flycircuit data - "fc_pns0219"
-# load("~/myscripts/FAFB2017_paper/data/fc_pns0219.rda")
+# load(paste0(getwd(), "/data/fc_pns0219.rda"))
 # 
 # Jefferis07 data - allpns.FCWB.rda
-# #  load("~/myscripts/FAFB2017_paper/data/allpns.FCWB.rda")
+# load(paste0(getwd(), "/data/allpns.FCWB.rda"))
 
 gj_mz19 = subset(allpns.FCWB, Glomerulus %in% c("DA1", "DC3", "VA1d")) %>%
   mirror_brain(brain=FCWB, transform='flip')
@@ -98,7 +94,6 @@ dev.off()
 ### DM2---------
 # EM plot------
 dm2_black_list = c(1217, 1162, 1604, 2636, 1246, 1248, 1249)
-
 
 dm2 = subset(uPN, glomerulus=="glomerulus DM2")
 

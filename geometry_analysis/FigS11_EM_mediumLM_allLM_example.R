@@ -3,7 +3,6 @@
 # Assume VM7 in MyNeurons is VM7d, since 1 is VM7v
 # VA3 and VM1 have only 1 neuron in MyNeurons
 
-
 # all gloms ranked in std_glom : 
 all_glom_rank = c("DL2d", "DA2", "VA1v", "VM7v", "DL1", "DM2", 
   "VM7d", "DM6", "DM5", "VM5d", "DA1", "VA7m", "VA1d", "D", 
@@ -12,23 +11,7 @@ all_glom_rank = c("DL2d", "DA2", "VA1v", "VM7v", "DL1", "DM2",
 
 gj_glom_rank = all_glom_rank[all_glom_rank %in% unique(gj_coll_0223[,'std_glom'])]
 
-if (FALSE) {
-  # the scripts to generate fb_ca_skln_170403, gj_ca_skln_170403 just in case
-  fb_ca_skln = xform_brain(uPN, sample=FAFB13, reference=FCWB) %>%
-    mirror_brain(FCWB) %>%
-    get_calyx_skeletons
-  
-  fb_ca_skln[,'std_glom']=glom_data[fb_ca_skln[,'glomerulus']]
-  
-  # Jefferis 07 PNs
-  load("~/myscripts/git_clone/r/gj/AnalysisSuite/R/Data/MyNeurons.rda")
-  source("~/myscripts/bocklab_git/bocklab/zhihao/r/scripts/170220-clean_up_TKA7R_from_MyNeurons.R")
-  gj_ca_skln = subset(MyNeurons, Glomerulus %in% gj_gloms) %>%
-    xform_brain(sample="Cell07", reference=FCWB) %>%
-    mirror_brain(brain=FCWB, transform='flip') %>%
-    get_calyx_skeletons
-}
-
+# When supplied x, pick the median value
 which.median <- function(x) which.min(abs(x - median(x)))
 
 plot_glom <- function(nl, p_fix="", to_save=TRUE, ...) {
@@ -38,8 +21,8 @@ plot_glom <- function(nl, p_fix="", to_save=TRUE, ...) {
   if (to_save) dev.off()
 } 
   
-
 fb_nl = fb_ca_skln_170403
+# note that gj_ca_skln_170403 is from MyNeurons.rda in "jefferis/AnalysisSuite"
 gj_nl = gj_ca_skln_170403
 
 gj_nl[,'std_glom']=glom_data[gj_nl[,'Glomerulus'] %>% as.character]
@@ -52,8 +35,10 @@ pdf("170403-EMvsLMvsMedian_last8.pdf", width = 8, height = 12)
 n_row = 8
 par(mfrow = c(n_row, 3), mar=c(0,2.2,2,0), oma=c(0,2.2,2,0))
 
+# run it twice to plot gj_glom_rank[1:8] in 1st column and gj_glom_rank[9:16] in 2nd column
 # gloms = gj_glom_rank[1:8]
 gloms = gj_glom_rank[9:16]
+
 for (i in seq_along(gloms))  {
 
 glom = gloms[[i]]

@@ -1,6 +1,8 @@
 
+# a list of section numbers that cause artefactual spikes in neurons
 blk_list = c(1171, 1162, 1193, 1217, 1604, 1246, 1248, 1249, 2636, 1325, 4417)
 
+# smooth_spikes serve the same goal as unspikes function in elmr
 fb_vm2 = subset(uPN, glomerulus=="glomerulus VM2") %>%
         nlapply(smooth_spikes, blk_list) %>%
         nlapply(resample, 1e3)
@@ -17,8 +19,8 @@ t1 = nblast_fafb(vm2, db=allpndps) %>%
 
 # 51886 vs DvGlutMARCM-F002668_seg001
 # "DvGlutMARCM-F002629_seg003" "DvGlutMARCM-F002668_seg001" "DvGlutMARCM-F002401_seg001" "DvGlutMARCM-F003228_seg001"
-
-fc_450=read.neurons("~/myscripts/FAFB2017_paper/data/VGlut-F-500450.swc", 
+owd=getwd()
+fc_450=read.neurons(paste0(owd, "/data/VGlut-F-500450.swc"), 
                     neuronnames="DvGlutMARCM-F002668_seg001", 
                     df=subset(allpndps, "DvGlutMARCM-F002668_seg001")[,])
 

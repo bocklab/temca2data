@@ -3,7 +3,7 @@ uPN_in_fc = xform_brain(uPN, sample=FAFB13, reference=FCWB)
 fb_ca_coll = get_calyx_collaterals(uPN_in_fc)
 fb_ca_coll[,'std_glom']=glom_data[fb_ca_coll[,'glomerulus']]
   # fb_tbl = summarize_pair_wise(fb_ca_coll, fb_std_gloms, 'FAFB', get_dist_summary)
-load("~/myscripts/FAFB2017_paper/data/lm_coll_subset_170331.rda")
+load(paste0(getwd(), "/data/lm_coll_subset_170331.rda"))
   
 lm_std_gloms = c(fc_std_gloms, gj_std_gloms)
   
@@ -11,8 +11,7 @@ fb_coll_tbl = summarize_pair_wise(fb_ca_coll, fb_std_gloms, 'FAFB', get_dist_sum
 
 fb_nblast_tbl = summarize_pair_wise(fb_ca_coll, fb_std_gloms, 'FAFB', get_nblast_score)
   
-# subset means resample from the whole population of LM PNs from both sources
-  
+# lm_subset_170331 is a subset of LM PNs from sampling the whole population of LM PNs from both sources (flycircuit and Jefferis2007)
 lm_coll_subset = lm_subset_170331
   
 lm_coll_tbl_subset = summarize_pair_wise(lm_coll_subset, lm_std_gloms, 'LM', get_dist_summary)
@@ -21,7 +20,7 @@ lm_nblast_subset = summarize_pair_wise(lm_coll_subset, lm_std_gloms, 'LM', get_n
 emlm_tbl_subset = rbind(lm_coll_tbl_subset, fb_coll_tbl) %>% mutate(type=factor(.$type))
 emlm_nblast_tbl = rbind(lm_nblast_subset, fb_nblast_tbl) %>% mutate(type=factor(.$type))
   
-  # glom ranks------
+  # order glom by difference between LM and EM------
 all_glom_rank = rank_glom_by_diff(emlm_tbl_subset) %>% 
   c(gsub("glomerulus ", "", fb_gloms_extra) %>% sort) %>% 
   print
@@ -69,7 +68,7 @@ LMvsEM_t_test = t.test(get_nums('FAFB', intersect(fb_std_gloms, lm_std_gloms)), 
 LMvsEM_nblast_t_test = t.test(get_nums('FAFB', intersect(fb_std_gloms, lm_std_gloms), emlm_nblast_tbl, 'nblast_mean_score'), 
                               get_nums('LM', tbl=emlm_nblast_tbl, stat_col='nblast_mean_score'))
 
-# play with histogram------
+# histogram------
 data_tbl = emlm_tbl_subset
 mean_tbl = filter(data_tbl, type %in% unname(glom_data[fb_gloms])) %>% 
   group_by(groups) %>% 

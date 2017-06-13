@@ -1,19 +1,4 @@
 
-
-# general packages
-library(magrittr)
-library(rgl)
-library(dplyr)
-# neuro
-library(catmaid)
-library(elmr)
-library(nat)
-library(nat.flybrains)
-library(mushroom)
-library(flycircuit)
-
-library(reshape2)
-
 doMC::registerDoMC(7)
 
 # get skids--------
@@ -35,7 +20,6 @@ fb_gloms = c("glomerulus D", "glomerulus DA1", "glomerulus DA2",
 "glomerulus VM2", "glomerulus VM3", "glomerulus VM4",                        
 "glomerulus VM5d", "glomerulus VM5v", "glomerulus VM6",
 "glomerulus VM7d", "glomerulus VM7v")
-
 
 fb_pn = subset(pns, glomerulus %in% fb_gloms) %>%
   xform_brain(sample="FAFB13", reference = FCWB) %>%
@@ -60,8 +44,4 @@ nb_tbl_reverse = lapply(pn_nblast_reverse, summarize_FBnblast) %>%
   mutate(neuron_name = fb_pn[,'name'], skid=as.integer(names(fb_pn)))
 
 # write.xlsx(nb_tbl_reverse, "170520-STable1_NBLAST_PN_raw.xlsx")
-
-
-
-
 

@@ -1,6 +1,4 @@
 
-# source("/Users/zhengz11/myscripts/bocklab_git/bocklab/zhihao/r/scripts/170326-process_pn_colors_by_sensilla.R")
-
 pn_list = list()
 for (i in seq_along(all_sen)) {
   sen = all_sen[[i]]
@@ -16,6 +14,7 @@ t1[,'sensillum'] = rep('unknown', length(t1))
 
 all_pns = c(PNs, t1)
 
+# assign color for different groups of PNs according to sensilla types
 color_pal = c(large_basiconic="blue4", thin_basiconic="skyblue1", 
               small_basiconic="royalblue", T1_trichoid="red", 
               T2_trichoid="orangered2", T3_trichoid="darkorange",

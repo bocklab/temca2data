@@ -1,27 +1,4 @@
 
-# original script: 170322-nblast_cluster_PN_fig4d_FAFB17.R
-
-# source("~/myscripts/bocklab_git/bocklab/zhihao/r/scripts/170213-concentric_territoriesz.R")
-
-
-# general packages
-library(magrittr)
-
-library(igraph)
-library(rgl)
-# library(grid)
-library(dplyr)
-library(ggplot2)
-library(reshape2)
-# library(Heatplus)
-# neuro
-
-# library(caTools)
-library(nat.templatebrains)
-library(nat.nblast)
-library(dendroextras)
-library(dendextend)
-
 pndps = dotprops(uPN, k=5, resample=1e3) %>%
   xform_brain(sample=FAFB13, ref=JFRC2)
 
