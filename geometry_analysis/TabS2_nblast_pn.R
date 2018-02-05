@@ -21,9 +21,7 @@ fb_gloms = c("glomerulus D", "glomerulus DA1", "glomerulus DA2",
 "glomerulus VM5d", "glomerulus VM5v", "glomerulus VM6",
 "glomerulus VM7d", "glomerulus VM7v")
 
-fb_pn = subset(pns, glomerulus %in% fb_gloms) %>%
-  xform_brain(sample="FAFB13", reference = FCWB) %>%
-  mirror_brain(FCWB)
+fb_pn = subset(pns, glomerulus %in% fb_gloms)
 
 # NBLAST---------
 allpndps=flycircuit::load_si_data('allpndps.rds')

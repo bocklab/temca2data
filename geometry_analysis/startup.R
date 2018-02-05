@@ -1,9 +1,7 @@
 
 install_packages <- function() {
   # only run it if these packages have not been installed
-  # Two usually need to be installed:
-  # 1) a fork (and slightly modified) version of elmr from "zhihaozheng/elmr" (ZZ_TODO to ellimiate that fragile dependency)
-  # 2) "jefferis/nat.as" and therefore "jefferis/AnalysisSuite"
+  # might need "jefferis/nat.as" and therefore "jefferis/AnalysisSuite"
   message("Installing packages!")
   if(!interactive())
     options(repos="http://cran.rstudio.com")
@@ -20,13 +18,12 @@ install_packages <- function() {
                              "jefferislab/nat.flybrains",
                              "jefferis/flycircuit",
                              "jefferis/rcatmaid",
-                             "jefferis/nat.as"))
+                             "jefferis/nat.as",
+                             "jefferis/elmr"))
   
   nat.as::install_analysis_suite()
   nat.as::reload_analysis_suite()
   
-  # note that downloading the fork elmr is needed (ZZ_TODO)
-  devtools::install_github("zhihaozheng/elmr")
   devtools::install_github("zhihaozheng/rmushroom")
 }
 
@@ -45,6 +42,8 @@ library(nat.flybrains)
 library(grid)
 library(reshape2)
 library(rgl)
+library(dendroextras)
+library(dendextend)
 
 # laod funtions, data, and meta-data
 source(file.path(getwd(),"functions.R"))

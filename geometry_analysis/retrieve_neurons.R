@@ -23,4 +23,4 @@ unigloms = catmaid_query_by_annotation("^uniglom$",  type="annotation", conn=faf
 all_sen = catmaid_query_by_annotation("^sensilla_type$",  type="annotation", conn=fafb_conn)$name
 glom_sen = lapply(all_sen, function(sen) catmaid_query_by_annotation(paste0("^", sen, "$"),  type="annotation", conn=fafb_conn)$name)
 names(glom_sen) = all_sen
-# save(unigloms, all_sen, glom_sen, file = "glom_sen_metaData.RData")
+# save(unigloms, all_sen, glom_sen, pn_skids, file = "glom_sen_metaData.RData")

@@ -19,7 +19,7 @@ t2 = sheet2[,c(1,3)] %>%
   melt(id.vars="Glomerulus", variable.name="modality", value.name="SD")
 
 t3 = inner_join(t1,t2)
-
+t3$modality = factor(t3$modality, ordered=TRUE, levels =c("EM", "LM"))
 # y=PN_counts, ymin=PN_counts-SD, ymax=PN_counts+SD
 p <- ggplot(t3, aes(x=Glomerulus, y=PN_counts, fill=modality)) +
   geom_errorbar(aes(ymin=PN_counts-SD, ymax=PN_counts+SD, alpha=modality), position="dodge", width=0.5) +
@@ -42,3 +42,6 @@ p <- ggplot(t3, aes(x=Glomerulus, y=PN_counts, fill=modality)) +
 p
 
 # ggsave("170518-pn_counts_per_glom_EMvsLM_vText.pdf", scale=1.2, width = 20, height = 6)
+
+# switch colors for LM and EM to be consistent with other figures
+# # ggsave("171002-pn_counts_per_glom_EMvsLM.pdf", scale=1.2, width = 20, height = 6)
