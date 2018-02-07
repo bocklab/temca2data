@@ -4,9 +4,10 @@ library(magrittr)
 library(reshape2)
 library(dplyr)
 library(ggplot2)
+library(here)
 
 # bad - no need to use xlsx
-sheet2 = read.xlsx("/Users/zhengz11/myscripts/FAFB2017_paper/data/PNcountsPerGlom.xlsx", 1) %>%
+sheet2 = read.xlsx(here("data/PNcountsPerGlom.xlsx"), 1) %>%
   .[,-c(5,6)] 
 
 t1 = sheet2[,c(1,2,4)] %>% 
