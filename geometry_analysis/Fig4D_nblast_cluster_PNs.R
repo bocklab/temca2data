@@ -30,28 +30,31 @@ color_pal = c(large_basiconic="blue4", thin_basiconic="skyblue1",
               maxillary_palp_basiconic="springgreen1", antennal_coeloconic="yellow3", 
               antennal_intermediate="purple", unknown="deeppink2")
 
-# need to fix it to make it not pull from CATMAID!!! --ZZ
-pn_colors = list()
-for (i in all_sen) {
-  gloms = catmaid_query_by_annotation(paste0("^", i, "$"),  type="annotation", conn=fafb_conn)$name
+if (FALSE) {
+  # This is how type categories are pulled from CATMAID, 
+  # need FAFB CATMAID credential and usually shouldn't need to run this.
+  pn_colors = list()
+  for (i in all_sen) {
+    gloms = catmaid_query_by_annotation(paste0("^", i, "$"),  type="annotation", conn=fafb_conn)$name
+    
+    skids = lapply(gloms, function(x) paste0("^", x, "$") %>% 
+                     catmaid_query_by_annotation(type="neuron", conn=fafb_conn) %>% 
+                     .$skid %>%
+                     intersect(pn_skids)) %>%
+                     {do.call(c, .)}
+    
+    pn_colors = rep(i, length(skids)) %>%
+      setNames(unname(skids)) %>%
+      c(pn_colors)
+  }
   
-  skids = lapply(gloms, function(x) paste0("^", x, "$") %>% 
-                   catmaid_query_by_annotation(type="neuron", conn=fafb_conn) %>% 
-                   .$skid %>%
-                   intersect(pn_skids)) %>%
-         {do.call(c, .)}
-  
-  pn_colors = rep(i, length(skids)) %>%
-    setNames(unname(skids)) %>%
+  pn_colors = setdiff(names(pndps), names(pn_colors)) %>% 
+  {setNames(rep("unknown",length(.)), .)} %>%
     c(pn_colors)
+  # correct a DM5 temporarily
+  pn_colors['57385'] = pn_colors['27611']
 }
 
-pn_colors = setdiff(names(pndps), names(pn_colors)) %>% 
-  {setNames(rep("unknown",length(.)), .)} %>%
-  c(pn_colors)
-
-# correct a DM5 temporarily
-pn_colors['57385'] = pn_colors['27611']
 
 #-----
 # a better PN color plate
