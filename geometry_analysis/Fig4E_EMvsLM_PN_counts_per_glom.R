@@ -45,3 +45,6 @@ p
 
 # switch colors for LM and EM to be consistent with other figures
 # # ggsave("171002-pn_counts_per_glom_EMvsLM.pdf", scale=1.2, width = 20, height = 6)
+
+# update to May_19
+# ggsave("18020818-pn_counts_per_glom_EMvsLM_vText.pdf", scale=1.2, width = 20, height = 6)
