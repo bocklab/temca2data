@@ -9,7 +9,9 @@ all_glom_rank = c("DL2d", "DA2", "VA1v", "VM7v", "DL1", "DM2",
   "DC3", "VC4", "DL2v", "VM2", "VM3", "DC2", "VM5v", "VM1", 
   "DL3", "VC3m", "DA3", "V", "VA3", "VA5", "VL1")
 
-gj_glom_rank = all_glom_rank[all_glom_rank %in% unique(gj_coll_0223[,'std_glom'])]
+# gj_glom_rank = all_glom_rank[all_glom_rank %in% unique(gj_coll_0223[,'std_glom'])]
+gj_glom_rank = all_glom_rank[all_glom_rank %in% gj_std_gloms]
+
 
 # When supplied x, pick the median value
 which.median <- function(x) which.min(abs(x - median(x)))
