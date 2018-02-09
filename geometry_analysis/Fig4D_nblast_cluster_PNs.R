@@ -15,7 +15,7 @@ pnhc=nhclust(scoremat=pn.aba)
 
 # produce sensilla category to prepare color-----------
 
-all_sen = catmaid_query_by_annotation("^sensilla_type$",  type="annotation", conn=fafb_conn)$name
+# all_sen = catmaid_query_by_annotation("^sensilla_type$",  type="annotation", conn=fafb_conn)$name
 
 color_pal = c(large_basiconic="blue4", thin_basiconic="skyblue1", 
               small_basiconic="royalblue", T1_trichoid="red", 
@@ -64,4 +64,5 @@ plot(t3)
 # axis(2, lwd = 4)
 # dev.off()
 
-
+# new after 
+# pdf("180208-PN_glom_nhcluster_FAFB2017.pdf", width=20, height=6)
