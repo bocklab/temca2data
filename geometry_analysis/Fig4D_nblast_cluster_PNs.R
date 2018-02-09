@@ -4,6 +4,13 @@ pndps = dotprops(uPN, k=5, resample=1e3) %>%
 
 pndps[,'glom'] = gsub("glomerulus ", "", pndps[,'glomerulus'])  
 
+# 180209 incoporate identification change from Marta C.
+pndps["37250","glom"] = "DA4m"
+pndps["40749","glom"] = "DA4l"
+
+# 180209 removing VCx and VCy since they are ambiguous
+pndps = subset(pndps, !(glom %in% c("VCx", "VCy")))
+
 # allbyall for all PNs
 pn.aba = nblast_allbyall(pndps, .progress='text')
 
@@ -23,6 +30,7 @@ color_pal = c(large_basiconic="blue4", thin_basiconic="skyblue1",
               maxillary_palp_basiconic="springgreen1", antennal_coeloconic="yellow3", 
               antennal_intermediate="purple", unknown="deeppink2")
 
+# need to fix it to make it not pull from CATMAID!!! --ZZ
 pn_colors = list()
 for (i in all_sen) {
   gloms = catmaid_query_by_annotation(paste0("^", i, "$"),  type="annotation", conn=fafb_conn)$name
@@ -42,6 +50,12 @@ pn_colors = setdiff(names(pndps), names(pn_colors)) %>%
   {setNames(rep("unknown",length(.)), .)} %>%
   c(pn_colors)
 
+# correct a DM5 temporarily
+pn_colors['57385'] = pn_colors['27611']
+
+#-----
+# a better PN color plate
+
 # function------
 height_for_ngroups<-function(hc, k) {
   s=sort(hc$height, decreasing=TRUE)
@@ -60,9 +74,11 @@ labels(t3) = pndps[,'glom'][hc_plot$order]
 plot(t3)
 
 # pdf("170327-PN_glom_nhcluster_FAFB2017.pdf", width=20, height=6)
-# plot(t3, ylab='Height')
-# axis(2, lwd = 4)
-# dev.off()
 
-# new after 
-# pdf("180208-PN_glom_nhcluster_FAFB2017.pdf", width=20, height=6)
+# new save
+if (FALSE) {
+  pdf("180208-PN_glom_nhcluster_FAFB2017.pdf", width=20, height=6)
+  plot(t3, ylab='Height')
+  axis(2, lwd = 4)
+  dev.off()
+}
