@@ -13,6 +13,10 @@ fb_nblast_tbl = summarize_pair_wise(fb_ca_coll, fb_std_gloms, 'FAFB', get_nblast
   
 # lm_subset_170331 is a subset of LM PNs from sampling the whole population of LM PNs from both sources (flycircuit and Jefferis2007)
 lm_coll_subset = lm_subset_170331
+
+# to remove a DL2d, and a DM5 given Marta C. identification correction
+lm_subset_170331 = c(lm_subset_170331, t11[8])
+save(lm_subset_170331, file="lm_coll_subset_170331.rda")
   
 lm_coll_tbl_subset = summarize_pair_wise(lm_coll_subset, lm_std_gloms, 'LM', get_dist_summary)
 lm_nblast_subset = summarize_pair_wise(lm_coll_subset, lm_std_gloms, 'LM', get_nblast_score)

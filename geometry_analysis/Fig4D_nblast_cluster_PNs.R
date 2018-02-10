@@ -4,10 +4,6 @@ pndps = dotprops(uPN, k=5, resample=1e3) %>%
 
 pndps[,'glom'] = gsub("glomerulus ", "", pndps[,'glomerulus'])  
 
-# 180209 incoporate identification change from Marta C.
-pndps["37250","glom"] = "DA4m"
-pndps["40749","glom"] = "DA4l"
-
 # 180209 removing VCx and VCy since they are ambiguous
 pndps = subset(pndps, !(glom %in% c("VCx", "VCy")))
 

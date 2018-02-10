@@ -4,9 +4,9 @@ library(magrittr)
 library(reshape2)
 library(dplyr)
 library(ggplot2)
+library(plyr)
 
-# bad - no need to use xlsx
-sheet2 = read.xlsx("/Users/zhengz11/myscripts/FAFB2017_paper/data/PNcountsPerGlom.xlsx", 1) %>%
+sheet2 = read.xlsx(file.path(getwd(),"data/PNcountsPerGlom.xlsx"), 1) %>%
   .[,-c(5,6)] 
 
 t1 = sheet2[,c(1,2,4)] %>% 
@@ -43,8 +43,5 @@ p
 
 # ggsave("170518-pn_counts_per_glom_EMvsLM_vText.pdf", scale=1.2, width = 20, height = 6)
 
-# switch colors for LM and EM to be consistent with other figures
-# # ggsave("171002-pn_counts_per_glom_EMvsLM.pdf", scale=1.2, width = 20, height = 6)
-
-# update to May_19
-# ggsave("18020818-pn_counts_per_glom_EMvsLM_vText.pdf", scale=1.2, width = 20, height = 6)
+# 180209 update to latest identificatons 
+# ggsave("180208-pn_counts_per_glom_EMvsLM_vText.pdf", scale=1.2, width = 20, height = 6)
