@@ -60,7 +60,7 @@ p <- ggplot(results, aes(y=dist_mean, x=groups)) +
   xlab("glomeruli")
 p
 # ggsave("170418-EMvsLM_CAcoll_dist_scattered1_wide.png", scale=1.2, width=20, height=6)
-# ggsave("180209-EMvsLM_CAcoll_dist_scattered1_wide.png", scale=1.2, width=20, height=6)
+# ggsave("180210-EMvsLM_CAcoll_dist_scattered1_wide.png", scale=1.2, width=20, height=6)
 
 # t test-------
 # fb_std_gloms, fc_std_gloms, gj_std_gloms
@@ -72,11 +72,11 @@ get_nums <- function(group_name, gloms=NULL, tbl=results, stat_col='dist_mean') 
 }
 
 LMvsEM_t_test = t.test(get_nums('FAFB', intersect(fb_std_gloms, lm_std_gloms)), get_nums('LM'))
-# p-value = 1.152e-10
+# p-value = 1.211e-09
 
 LMvsEM_nblast_t_test = t.test(get_nums('FAFB', intersect(fb_std_gloms, lm_std_gloms), emlm_nblast_tbl, 'nblast_mean_score'), 
                               get_nums('LM', tbl=emlm_nblast_tbl, stat_col='nblast_mean_score'))
-# p-value = 4.122e-14
+# p-value = 2.143e-12
 
 
 # histogram------
@@ -86,8 +86,8 @@ mean_tbl = filter(data_tbl, type %in% unname(glom_data[fb_gloms])) %>%
   summarize(m=mean(dist_mean), sd=sd(dist_mean))
 
 # groups        m       sd
-# FAFB 3.440909 1.522630
-# LM 5.785580 2.951023
+# FAFB 3.398358 1.528638
+# LM 5.492876 2.726772
 
 idx = which(data_tbl$dist_mean > 10)
 data_tbl[idx, 'dist_mean'] = rep(10.2, length(idx))
@@ -109,7 +109,7 @@ p <- ggplot(data_tbl, aes(x=dist_mean, fill=groups)) +
   xlab("mean distance")
 p
 # ggsave("170418-EMvsLM_CAcoll_dist_hist_wide.png", scale=1.2, width=20, height=6)
-# ggsave("180209-EMvsLM_CAcoll_dist_hist_wide.png", scale=1.2, width=20, height=6)
+# ggsave("180210-EMvsLM_CAcoll_dist_hist_wide.png", scale=1.2, width=20, height=6)
 
 
 # nblast plotting-------
@@ -134,7 +134,7 @@ p <- ggplot(results, aes(y=nblast_mean_score, x=groups)) +
   xlab("glomeruli")
 p
 # ggsave("170418-EMvsLM_CAcoll_nblast_scattered_annotated_wide.png", scale=1.2, width=20, height=6)
-# ggsave("180209-EMvsLM_CAcoll_nblast_scattered_annotated_wide.png", scale=1.2, width=20, height=6)
+# ggsave("180210-EMvsLM_CAcoll_nblast_scattered_annotated_wide.png", scale=1.2, width=20, height=6)
 
 # histogram of nblast scores------
 data_tbl = emlm_nblast_tbl
@@ -143,8 +143,8 @@ mean_nblast_tbl = filter(data_tbl, type %in% unname(glom_data[fb_gloms])) %>%
   summarize(m=mean(nblast_mean_score), sd=sd(nblast_mean_score))
 
 # groups         m        sd
-# FAFB 0.5555538 0.1802238
-# LM 0.3256254 0.2100291
+# FAFB 0.5582685 0.1786494
+# LM 0.3451998 0.2076796
 
 idx = which(data_tbl$nblast_mean_score < -0.05)
 data_tbl[idx, 'nblast_mean_score'] = rep(-0.055, length(idx))
@@ -168,4 +168,4 @@ p <- ggplot(data_tbl, aes(x=nblast_mean_score, fill=groups)) +
   xlab("NBLAST score")
 p
 # ggsave("170418-EMvsLM_CAcoll_nblat_hist_wide.png", scale=1.2, width=20, height=6)
-# ggsave("180209-EMvsLM_CAcoll_nblat_hist_wide.png", scale=1.2, width=20, height=6)
+# ggsave("180210-EMvsLM_CAcoll_nblat_hist_wide.png", scale=1.2, width=20, height=6)
