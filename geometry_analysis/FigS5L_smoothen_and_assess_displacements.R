@@ -5,32 +5,36 @@ library(ggplot2)
 library(catmaid)
 
 get_displacements <- function(n, n_sm) {
+  # calculate the displacements of skeleton nodes before (n) and after (n_sm) Gaussian smoothing
   nx = xyzmatrix(n)
   nsx = xyzmatrix(n_sm)
   r = sapply(seq_len(nrow(nx)), function(x) sqrt(sum((nx[x,] - nsx[x,])^2)))
   data.frame(r, n$d$Z/35) %>% setNames(c("distance","section_num"))
 }
 
+# Gaussian smoothen neurons with a signma of 12000
 smooth_nl <- function(nl) nlapply(nl, smooth_neuron, method = "gauss", sigma=12000)
 
 # kc_nl = read.neurons.catmaid("annotation:^fafb_ms_KCs$", conn=fafb_conn)
 # apl_nl = read.neurons.catmaid(203840, conn=fafb_conn)
 # pn_nl = read.neurons.catmaid("annotation:^fafb_ms_PNs$", conn=fafb_conn)
 
+# smoothen the KCs (kc_nl), APL (apl_nl), and the PNs (pn_nl)
+# These neurons are stored in data/neurons_for_jitters.RData
+# these are to smoothen them separately
 kc_sm_nl = nlapply(kc_nl, smooth_neuron, method = "gauss", sigma=12000)
 apl_sm_nl = nlapply(apl_nl, smooth_neuron, method = "gauss", sigma=12000)
 pn_sm_nl = nlapply(pn_nl, smooth_neuron, method = "gauss", sigma=12000)
 
 
-# start processing neuronlist (nl)
-# nl = kc_nl
-# nl = apl_nl
+# alternatively, this is to combine them into a single neuronlist and smoothen them altogether
 nl = c(pn_nl, apl_nl, kc_nl)
 nl_sm = smooth_nl(nl)
 
+# get the displacements before and after smoothing
 results = lapply(seq_along(nl), function(x) get_displacements(nl[[x]], nl_sm[[x]]))
 
-# get the means of each section---------
+# get the means of displacements for each section (z layer)---------
 data_tbl2 = bind_rows(results) %>%
   group_by(section_num) %>% 
   summarise(dist_mean=mean(distance))

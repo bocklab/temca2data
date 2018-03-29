@@ -1,14 +1,28 @@
 
+# uPN is the collection of uni-glomerular EM PNs used for analysis here
+
+# transform the PNs to light microscopy (LM) template brain coordinate (FCWB)
 uPN_in_fc = xform_brain(uPN, sample=FAFB13, reference=FCWB)
+
+# use a calyx surface mesh to trim the skeleton, only keeping their calyx collaterals
 fb_ca_coll = get_calyx_collaterals(uPN_in_fc)
+
+# standardize the glomerular (aka subtype) names of PNs
 fb_ca_coll[,'std_glom']=glom_data[fb_ca_coll[,'glomerulus']]
   # fb_tbl = summarize_pair_wise(fb_ca_coll, fb_std_gloms, 'FAFB', get_dist_summary)
+
+# load pre-randomly selected LM PN data for analysis
+# note that the LM PNs have been trimed to only keep their calyx collaterals
 load(paste0(getwd(), "/data/lm_coll_subset_170331.rda"))
   
 lm_std_gloms = c(fc_std_gloms, gj_std_gloms) %>% unique
-  
+
+# given a list of neurons, calculate pair-wise measurement (mean distance) and summarize results into a table
+# for FAFB EM PNs
 fb_coll_tbl = summarize_pair_wise(fb_ca_coll, fb_std_gloms, 'FAFB', get_dist_summary)
 
+# given a list of neurons, calculate pair-wise measurement (nblast score) and summarize results into a table
+# for FAFB EM PNs
 fb_nblast_tbl = summarize_pair_wise(fb_ca_coll, fb_std_gloms, 'FAFB', get_nblast_score)
   
 # lm_subset_170331 is a subset of LM PNs from sampling the whole population of LM PNs from both sources (flycircuit and Jefferis2007)
@@ -17,27 +31,28 @@ lm_coll_subset = lm_subset_170331
 # remove an extra "DM5" and an extra "DL2d" according to Marta C.'s corrected identifications of EM PN counts
 to_remove = c(which(lm_coll_subset[,'Glomerulus'] %in% "DM5")[[1]], 
   which(lm_coll_subset[,'Glomerulus'] %in% "DL2d")[[1]])
-
 lm_coll_subset = lm_coll_subset[-to_remove]
   
+# Same as above but for LM PNs
 lm_coll_tbl_subset = summarize_pair_wise(lm_coll_subset, lm_std_gloms, 'LM', get_dist_summary)
 lm_nblast_subset = summarize_pair_wise(lm_coll_subset, lm_std_gloms, 'LM', get_nblast_score)
 
-
+# combine the resulting tables together for plotting
 emlm_tbl_subset = rbind(lm_coll_tbl_subset, fb_coll_tbl) %>% mutate(type=factor(.$type))
 emlm_nblast_tbl = rbind(lm_nblast_subset, fb_nblast_tbl) %>% mutate(type=factor(.$type))
   
-  # order glom by difference between LM and EM------
+# order glom by difference between LM and EM------
 all_glom_rank = rank_glom_by_diff(emlm_tbl_subset) %>% 
   c(gsub("glomerulus ", "", fb_gloms_extra) %>% sort) %>% 
   print
-  
+
+# same ordering as above, but for NBLAST results
 nblast_glom_rank = rank_glom_by_nblast(emlm_nblast_tbl) %>%
   c(gsub("glomerulus ", "", fb_gloms_extra) %>% sort) %>% 
   print
 
 
-# plotting----------
+# plotting Fig5B ----------
 results = tidyr::complete(emlm_tbl_subset, type, groups)
 results$type = factor(results$type, levels=all_glom_rank)
 results = mutate(results, pseudo_mean = dist_mean)
@@ -62,9 +77,9 @@ p
 # ggsave("170418-EMvsLM_CAcoll_dist_scattered1_wide.png", scale=1.2, width=20, height=6)
 # ggsave("180210-EMvsLM_CAcoll_dist_scattered1_wide.png", scale=1.2, width=20, height=6)
 
-# t test-------
-# fb_std_gloms, fc_std_gloms, gj_std_gloms
 
+# t test for Fig 5C and Fig 7C-------
+# fb_std_gloms, fc_std_gloms, gj_std_gloms
 get_nums <- function(group_name, gloms=NULL, tbl=results, stat_col='dist_mean') {
   if (is.null(gloms)) dist_n = filter(tbl, groups==group_name)[,stat_col]
   else dist_n = filter(tbl, groups==group_name, type %in% gloms)[,stat_col]
@@ -72,26 +87,26 @@ get_nums <- function(group_name, gloms=NULL, tbl=results, stat_col='dist_mean') 
 }
 
 LMvsEM_t_test = t.test(get_nums('FAFB', intersect(fb_std_gloms, lm_std_gloms)), get_nums('LM'))
-# p-value = 1.211e-09
+# Fig 5C p-value = 1.211e-09
 
 LMvsEM_nblast_t_test = t.test(get_nums('FAFB', intersect(fb_std_gloms, lm_std_gloms), emlm_nblast_tbl, 'nblast_mean_score'), 
                               get_nums('LM', tbl=emlm_nblast_tbl, stat_col='nblast_mean_score'))
-# p-value = 2.143e-12
+# Fig 7B p-value = 2.143e-12
 
 
-# histogram------
+# calculate mean and std for usage in Fig 5C legend
 data_tbl = emlm_tbl_subset
 mean_tbl = filter(data_tbl, type %in% unname(glom_data[fb_gloms])) %>% 
   group_by(groups) %>% 
   summarize(m=mean(dist_mean), sd=sd(dist_mean))
-
 # groups        m       sd
 # FAFB 3.398358 1.528638
 # LM 5.492876 2.726772
 
+
+# Fig 5C histogram for Fig 5B ------
 idx = which(data_tbl$dist_mean > 10)
 data_tbl[idx, 'dist_mean'] = rep(10.2, length(idx))
-
 p <- ggplot(data_tbl, aes(x=dist_mean, fill=groups)) +
   stat_bin(breaks=seq(1, 10.5, 0.5), position="dodge") +
   scale_y_continuous(breaks = scales::pretty_breaks(n=10), limit=c(0,22), expand=c(0,0)) +
@@ -112,7 +127,7 @@ p
 # ggsave("180210-EMvsLM_CAcoll_dist_hist_wide.png", scale=1.2, width=20, height=6)
 
 
-# nblast plotting-------
+# plotting pair-wise nblast scores Fig S7B-------
 results = emlm_nblast_tbl
 results = tidyr::complete(results, type, groups)
 results$type = factor(results$type, levels=nblast_glom_rank)
@@ -136,19 +151,20 @@ p
 # ggsave("170418-EMvsLM_CAcoll_nblast_scattered_annotated_wide.png", scale=1.2, width=20, height=6)
 # ggsave("180210-EMvsLM_CAcoll_nblast_scattered_annotated_wide.png", scale=1.2, width=20, height=6)
 
-# histogram of nblast scores------
+
+# calculate mean and std for usage in Fig 7C and its legend
 data_tbl = emlm_nblast_tbl
 mean_nblast_tbl = filter(data_tbl, type %in% unname(glom_data[fb_gloms])) %>% 
   group_by(groups) %>% 
   summarize(m=mean(nblast_mean_score), sd=sd(nblast_mean_score))
-
 # groups         m        sd
 # FAFB 0.5582685 0.1786494
 # LM 0.3451998 0.2076796
 
+
+# Fig 7C histogram of nblast scores (Fig 7B)------
 idx = which(data_tbl$nblast_mean_score < -0.05)
 data_tbl[idx, 'nblast_mean_score'] = rep(-0.055, length(idx))
-
 nb_break = seq(-0.1, 0.9, .05)
 
 p <- ggplot(data_tbl, aes(x=nblast_mean_score, fill=groups)) +

@@ -1,7 +1,12 @@
 
+# uPN is the collection of uni-glomerular EM PNs used for analysis in the paper
+
+# convert the neurons into dotprops (point clouds with tangent vectors) for NBLAST
+# transform them into a LM template brain (JFRC2)
 pndps = dotprops(uPN, k=5, resample=1e3) %>%
   xform_brain(sample=FAFB13, ref=JFRC2)
 
+# clean up glomerular names of PNs
 pndps[,'glom'] = gsub("glomerulus ", "", pndps[,'glomerulus'])  
 
 # 180209 removing VCx and VCy since they are ambiguous
@@ -10,21 +15,25 @@ pndps = subset(pndps, !(glom %in% c("VCx", "VCy")))
 # allbyall for all PNs
 pn.aba = nblast_allbyall(pndps, .progress='text')
 
+# hierarchical clustering of the nblast all by all score matrix
 pnhc=nhclust(scoremat=pn.aba)
 
 # pdf("170322-PN_glom_nhcluster_FAFB2017.pdf", width=20, height=12)
 # plot(pnhc, labels = pndps[,'glom'])
 # dev.off()
 
-# produce sensilla category to prepare color-----------
-
+# retrieve sensilla categories for coloring-----------
 # all_sen = catmaid_query_by_annotation("^sensilla_type$",  type="annotation", conn=fafb_conn)$name
 
+# assign colors based on sensilla categories-----------
+# the sensilla type info is stored in data/glom_sen_metaData.RData
+# use this list to map sensilla types to their corresponding colors
 color_pal = c(large_basiconic="blue4", thin_basiconic="skyblue1", 
               small_basiconic="royalblue", T1_trichoid="red", 
               T2_trichoid="orangered2", T3_trichoid="darkorange",
               maxillary_palp_basiconic="springgreen1", antennal_coeloconic="yellow3", 
               antennal_intermediate="purple", unknown="deeppink2")
+
 
 if (FALSE) {
   # This is how type categories are pulled from CATMAID, 
@@ -74,7 +83,7 @@ plot(t3)
 
 # pdf("170327-PN_glom_nhcluster_FAFB2017.pdf", width=20, height=6)
 
-# new save
+# saving the resultant dendrogram
 if (FALSE) {
   pdf("180208-PN_glom_nhcluster_FAFB2017.pdf", width=20, height=6)
   plot(t3, ylab='Height')
