@@ -1,7 +1,10 @@
 
-# This is used to download neurons from CATMAID
-# FAFB CATMAID credential is needed, name the CATMAID connection fafb_conn
-# normally the code should run with the data in the package without CATMAID connection
+# This is used to re-download neurons from CATMAID
+# Normally to replicate the analysis, one doesn't need the script here.
+# All neurons and meta-data are pre-saved in the data directory.
+
+# FAFB CATMAID credential is needed for this script, name the CATMAID connection fafb_conn
+
 
 # retrieve and save all PNs
 pn1 = catmaid_query_by_annotation("^right_olfactory_PN$",  type="neuron", conn=fafb_conn)$skid 
