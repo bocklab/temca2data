@@ -1,7 +1,7 @@
 
 doMC::registerDoMC(7)
 
-# get skids--------
+# Only run NBLAST for PNs of the following glomeruli
 # check with Flycircuit dataset on 2017-03-30
 # take out:
 # "glomerulus DM3" has multiple neurons in LM data
@@ -23,14 +23,19 @@ fb_gloms = c("glomerulus D", "glomerulus DA1", "glomerulus DA2",
 
 fb_pn = subset(pns, glomerulus %in% fb_gloms)
 
+
 # NBLAST---------
+# laod the flycircuit NBLAST PN database
 allpndps=flycircuit::load_si_data('allpndps.rds')
 t_pns = allpndps[!sapply(attr(allpndps, 'df')$glom, is.na)]
 options(nat.default.neuronlist='t_pns')
 len = 10
 
+# run NBLAST with nblast_fafb
 pn_nblast_reverse = lapply(fb_pn, function(sk) nblast_fafb(as.neuronlist(sk), reverse=TRUE, conn=fafb_conn) %>% summary)
 
+
+# summarize results into a table
 summarize_FBnblast <- function(x) {
   t1 = x[1:10, c('muscore','glom')] 
   bind_cols(data.frame(t(t1$muscore)), data.frame(t(t1$glom)))
