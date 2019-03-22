@@ -124,12 +124,17 @@ in_bbox<-function(b) {
 in_fc_rca = in_bbox(bb_rca)
 
 get_calyx_collaterals <- function(nl, rs=1, spine_iv=TRUE) {
+  # given a neuronlist, resample the skeletons, 
+  # remove the longest path (aka spine or backbone) of each neuron,
+  # use a calyx boundingbox (in_fc_rca) to isolate only calyx collaterals (non-backbone) 
+  # for geometric measurements (mean distance or nblast scores)
   nlapply(nl, resample, rs) %>%
     nlapply(spine, UseStartPoint=TRUE, invert=spine_iv, rval="neuron") %>%
     nlapply(subset, in_fc_rca)
 }
 
 get_calyx_skeletons <- function(nl, rs=1) {
+  # same as above but only resample and isolate calyx skeletons
   nlapply(nl, resample, rs) %>%
     nlapply(subset, in_fc_rca)
 }
@@ -181,5 +186,6 @@ getwd() %>%
   file.path("data/") %>%
   {list.files(., full.names=TRUE, pattern ="\\.[Rr]")} %>%
   sapply(load,.GlobalEnv)
+
 
 uPN = subset(pns, glomerulus != "olfactory_multi_glom_PN")

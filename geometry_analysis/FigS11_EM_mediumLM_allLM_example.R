@@ -9,7 +9,9 @@ all_glom_rank = c("DL2d", "DA2", "VA1v", "VM7v", "DL1", "DM2",
   "DC3", "VC4", "DL2v", "VM2", "VM3", "DC2", "VM5v", "VM1", 
   "DL3", "VC3m", "DA3", "V", "VA3", "VA5", "VL1")
 
-gj_glom_rank = all_glom_rank[all_glom_rank %in% unique(gj_coll_0223[,'std_glom'])]
+# gj_glom_rank = all_glom_rank[all_glom_rank %in% unique(gj_coll_0223[,'std_glom'])]
+gj_glom_rank = all_glom_rank[all_glom_rank %in% gj_std_gloms]
+
 
 # When supplied x, pick the median value
 which.median <- function(x) which.min(abs(x - median(x)))
@@ -23,6 +25,10 @@ plot_glom <- function(nl, p_fix="", to_save=TRUE, ...) {
   
 fb_nl = fb_ca_skln_170403
 # note that gj_ca_skln_170403 is from MyNeurons.rda in "jefferis/AnalysisSuite"
+fb_nl = fb_nl[names(fb_nl) != "57385"]
+
+# remove the PN glomerulus DM5 57386 HG (skid 57385) 
+# that has since been found to be multiglomerular (Marta C.)
 gj_nl = gj_ca_skln_170403
 
 gj_nl[,'std_glom']=glom_data[gj_nl[,'Glomerulus'] %>% as.character]
@@ -30,14 +36,14 @@ gj_nl[,'std_glom']=glom_data[gj_nl[,'Glomerulus'] %>% as.character]
 gj_tbl = summarize_pair_wise(gj_nl, gj_std_gloms, 'Jefferis07', get_dist_summary)
 results = gj_tbl
 
-# pdf("170403-EMvsLMvsMedian_first8.pdf", width = 8, height = 12)
-pdf("170403-EMvsLMvsMedian_last8.pdf", width = 8, height = 12)
+pdf("170403-EMvsLMvsMedian_first8.pdf", width = 8, height = 12)
+# pdf("170403-EMvsLMvsMedian_last8.pdf", width = 8, height = 12)
 n_row = 8
 par(mfrow = c(n_row, 3), mar=c(0,2.2,2,0), oma=c(0,2.2,2,0))
 
 # run it twice to plot gj_glom_rank[1:8] in 1st column and gj_glom_rank[9:16] in 2nd column
-# gloms = gj_glom_rank[1:8]
-gloms = gj_glom_rank[9:16]
+gloms = gj_glom_rank[1:8]
+# gloms = gj_glom_rank[9:16]
 
 for (i in seq_along(gloms))  {
 

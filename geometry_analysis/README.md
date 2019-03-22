@@ -1,0 +1,1 @@
+To run the analsyis, first look at (or run) the startup.R to install and load required R packages. The startup.R file will also run functions.R, which will load necessary functions and data (in /data) for the analysis.
